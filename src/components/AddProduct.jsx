@@ -3,40 +3,45 @@ import React, { useState } from "react";
 const AddProduct = () => {
   const [url, setUrl] = useState("");
   const [product, setProduct] = useState(null);
+  const [buttonText , setButtontext] =  useState("Add Product")
 
   const onSubmit = async () => {
-    if (!url.trim()) {
-      alert("Please enter a URL");
-      return;
-    }
+  if (!url.trim()) {
+    alert("Please enter a URL");
+    return;
+  }
 
-    try {
-      const response = await fetch(
-        `${import.meta.env.VITE_SERVER_URL}/product/add-product`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ url }),
-        }
-      );
+  setButtontext("Loading..."); // Set loading text before request
 
-      const data = await response.json();
-
-      if (response.ok) {
-        alert("Product added successfully!");
-        setUrl(""); // Reset input
-        setProduct(data.data);
-        console.log(data.data);
-      } else {
-        alert(`Error: ${data.message || "Failed to add product"}`);
+  try {
+    const response = await fetch(
+      `${import.meta.env.VITE_SERVER_URL}/product/add-product`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ url }),
       }
-    } catch (error) {
-      console.error("Error adding product:", error);
-      alert("Network error. Please try again later.");
+    );
+
+    const data = await response.json();
+
+    if (response.ok) {
+      alert("Product added successfully!");
+      setUrl(""); // Reset input
+      setProduct(data.data);
+    } else {
+      alert(`Error: ${data.message || "Failed to add product"}`);
     }
-  };
+  } catch (error) {
+    console.error("Error adding product:", error);
+    alert("Network error. Please try again later.");
+  } finally {
+    setButtontext("Add Product"); // Always reset button text
+  }
+};
+
 
   return (
     <div className="flex flex-col items-center p-6 ">
@@ -52,7 +57,7 @@ const AddProduct = () => {
         onClick={onSubmit}
         className="p-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300"
       >
-        Add Product
+        {buttonText}
       </button>
       {product && (
         <div className="mt-6 p-4 bg-white rounded shadow-md w-72">

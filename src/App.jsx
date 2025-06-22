@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import AddProduct from "./components/AddProduct";
 import ProductTable from "./components/ProductTable";
+import FetchProducts from "./components/FetchProducts";
+
 
 function App() {
   const [password, setPassword] = useState("");
@@ -65,6 +67,16 @@ function App() {
           {/* Toggle Buttons */}
           <div className="fixed top-0 left-0 right-0 flex items-center justify-center space-x-4  z-10 p-4">
             <button
+              onClick={() => setView("fetch")}
+              className={`px-4 py-2 rounded-lg ${
+                view === "fetch"
+                  ? "bg-blue-600 text-white"
+                  : "bg-white border border-gray-300 text-gray-700"
+              }`}
+            >
+              Fetch Products
+            </button>
+            <button
               onClick={() => setView("add")}
               className={`px-4 py-2 rounded-lg ${
                 view === "add"
@@ -88,8 +100,11 @@ function App() {
 
           {/* Conditional Component Rendering */}
           <div className="w-full max-w-full sm:max-w-3xl md:max-w-5xl lg:max-w-7xl">
-  {view === "add" ? <AddProduct /> : <ProductTable />}
+  {view === "fetch" && <FetchProducts />}
+  {view === "add" && <AddProduct />}
+  {view === "table" && <ProductTable />}
 </div>
+
 
 
           {/* Logout Button */}
